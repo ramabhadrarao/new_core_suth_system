@@ -1,0 +1,795 @@
+<!-- views/layout.ejs - Base layout with Tabler UI -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= title %> - Dynamic Auth System</title>
+    <!-- CSS files -->
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-sprite.css" rel="stylesheet"> -->
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+        
+        .page-wrapper {
+            background: var(--tblr-body-bg);
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: var(--tblr-primary);
+            color: white;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: var(--tblr-gray-100);
+        }
+        
+        .card-actions .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1;
+            color: var(--tblr-avatar-color);
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            background-color: var(--tblr-gray-200);
+            border-radius: var(--tblr-border-radius);
+        }
+        
+        .navbar-brand img {
+            max-height: 2rem;
+        }
+        
+        .page-body {
+            padding-top: 1.5rem;
+        }
+        
+        /* Login page specific styles */
+        .page-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container-tight {
+            max-width: 30rem;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .form-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+            border-color: #667eea;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a6fd8;
+            border-color: #5a6fd8;
+        }
+        
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .alert {
+            border-radius: 0.5rem;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-danger {
+            background-color: #fee;
+            color: #dc3545;
+        }
+        
+        .alert-success {
+            background-color: #efe;
+            color: #28a745;
+        }
+        
+        .hr-text {
+            position: relative;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #6c757d;
+        }
+        
+        .hr-text::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+        }
+        
+        .hr-text span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+        }
+        
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1040;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                transition: left 0.3s ease;
+                border-right: 1px solid var(--tblr-border-color);
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 1030;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .sidebar-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        
+        .table-actions {
+            white-space: nowrap;
+        }
+        
+        .table-actions .btn {
+            padding: 0.25rem 0.5rem;
+            margin: 0 0.125rem;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.status-active {
+            background-color: var(--tblr-green-lt);
+            color: var(--tblr-green);
+        }
+        
+        .status-badge.status-inactive {
+            background-color: var(--tblr-red-lt);
+            color: var(--tblr-red);
+        }
+        
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .permission-card {
+            border: 1px solid var(--tblr-border-color);
+            border-radius: var(--tblr-border-radius);
+            padding: 1rem;
+        }
+        
+        .permission-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .permission-actions .form-check {
+            margin: 0;
+        }
+        
+        /* Icon fixes */
+        .icon {
+            width: 1rem;
+            height: 1rem;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+    </style>
+    <% if (typeof extraCSS !== 'undefined') { %>
+        <%= extraCSS %>
+    <% } %>
+</head>
+<body>
+    <div class="page">
+        <% if (user) { %>
+            <!-- Sidebar -->
+            <aside class="navbar navbar-vertical navbar-expand-lg sidebar" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <h1 class="navbar-brand navbar-brand-autodark">
+                        <a href="/dashboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <path d="M12 3a6.364 6.364 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                            </svg>
+                            Dynamic Auth
+                        </a>
+                    </h1>
+                    
+                    <div class="navbar-nav flex-row d-lg-none">
+                        <div class="nav-item d-none d-lg-flex me-3">
+                            <div class="btn-list">
+                                <!-- Notifications will go here -->
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                                <span class="avatar avatar-sm" style="background-image: url(https://ui-avatars.com/api/?name=<%= user.fullName %>&background=206bc4&color=fff)"></span>
+                                <div class="d-none d-xl-block ps-2">
+                                    <div><%= user.fullName %></div>
+                                    <div class="mt-1 small text-muted">@<%= user.username %></div>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a href="/auth/profile" class="dropdown-item">Profile</a>
+                                <a href="/dashboard/notifications" class="dropdown-item">Notifications</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item" onclick="logout()">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapse navbar-collapse" id="sidebar-menu">
+                        <ul class="navbar-nav pt-lg-3">
+                            <li class="nav-item">
+                                <a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'dashboard') ? 'active' : '' %>" href="/dashboard">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg class="icon"><use xlink:href="#tabler-home"></use></svg>
+                                    </span>
+                                    <span class="nav-link-title">Dashboard</span>
+                                </a>
+                            </li>
+                            
+                            <!-- Dynamic Models -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#models" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg class="icon"><use xlink:href="#tabler-database"></use></svg>
+                                    </span>
+                                    <span class="nav-link-title">Models</span>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                            <a class="dropdown-item" href="/models">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <svg class="icon"><use xlink:href="#tabler-settings"></use></svg>
+                                                </span>
+                                                Manage Models
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <% if (typeof availableModels !== 'undefined' && availableModels.length > 0) { %>
+                                                <% availableModels.forEach(model => { %>
+                                                    <a class="dropdown-item" href="/models/<%= model.name %>">
+                                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                            <svg class="icon"><use xlink:href="#tabler-<%= model.icon %>"></use></svg>
+                                                        </span>
+                                                        <%= model.displayName %>
+                                                    </a>
+                                                <% }); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <!-- File Management -->
+                            <li class="nav-item">
+                                <a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'attachments') ? 'active' : '' %>" href="/attachments">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg class="icon"><use xlink:href="#tabler-folder"></use></svg>
+                                    </span>
+                                    <span class="nav-link-title">Files</span>
+                                </a>
+                            </li>
+                            
+                            <!-- Administration -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#admin" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg class="icon"><use xlink:href="#tabler-shield"></use></svg>
+                                    </span>
+                                    <span class="nav-link-title">Administration</span>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                            <a class="dropdown-item" href="/users">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <svg class="icon"><use xlink:href="#tabler-users"></use></svg>
+                                                </span>
+                                                Users
+                                            </a>
+                                            <a class="dropdown-item" href="/roles">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <svg class="icon"><use xlink:href="#tabler-key"></use></svg>
+                                                </span>
+                                                Roles
+                                            </a>
+                                            <a class="dropdown-item" href="/permissions">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <svg class="icon"><use xlink:href="#tabler-lock"></use></svg>
+                                                </span>
+                                                Permissions
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Sidebar overlay for mobile -->
+            <div class="sidebar-overlay d-lg-none" onclick="toggleSidebar()"></div>
+        <% } %>
+        
+        <!-- Page wrapper -->
+        <div class="page-wrapper">
+            <% if (user) { %>
+                <!-- Page header -->
+                <div class="page-header d-print-none">
+                    <div class="container-xl">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <!-- Mobile menu toggle -->
+                                <div class="d-lg-none">
+                                    <button class="btn btn-outline-secondary" onclick="toggleSidebar()">
+                                        <svg class="icon"><use xlink:href="#tabler-menu-2"></use></svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Page title -->
+                                <h2 class="page-title">
+                                    <%= title %>
+                                </h2>
+                                
+                                <% if (typeof breadcrumbs !== 'undefined' && breadcrumbs.length > 0) { %>
+                                    <div class="page-pretitle">
+                                        <nav aria-label="breadcrumb">
+                                            <ol class="breadcrumb breadcrumb-arrows">
+                                                <% breadcrumbs.forEach((crumb, index) => { %>
+                                                    <li class="breadcrumb-item <%= index === breadcrumbs.length - 1 ? 'active' : '' %>">
+                                                        <% if (index === breadcrumbs.length - 1) { %>
+                                                            <%= crumb.title %>
+                                                        <% } else { %>
+                                                            <a href="<%= crumb.url %>"><%= crumb.title %></a>
+                                                        <% } %>
+                                                    </li>
+                                                <% }); %>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <!-- Page actions -->
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list">
+                                    <!-- Search -->
+                                    <div class="d-none d-sm-inline-block">
+                                        <form action="/dashboard/search" method="GET" class="d-flex">
+                                            <input type="search" name="q" class="form-control form-control-sm me-2" placeholder="Search..." aria-label="Search">
+                                            <button class="btn btn-sm btn-outline-secondary" type="submit">
+                                                <svg class="icon"><use xlink:href="#tabler-search"></use></svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Notifications -->
+                                    <div class="nav-item dropdown">
+                                        <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
+                                            <svg class="icon"><use xlink:href="#tabler-bell"></use></svg>
+                                            <span class="badge bg-red badge-notification badge-blink"></span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Notifications</h3>
+                                                </div>
+                                                <div class="list-group list-group-flush list-group-hoverable">
+                                                    <div class="list-group-item">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                                <span class="status-dot status-dot-animated bg-red d-block"></span>
+                                                            </div>
+                                                            <div class="col text-truncate">
+                                                                <a href="#" class="text-body d-block">Welcome to the system</a>
+                                                                <div class="d-block text-muted text-truncate mt-n1">
+                                                                    Your account has been created successfully
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <a href="#" class="list-group-item-actions">
+                                                                    <svg class="icon text-muted"><use xlink:href="#tabler-star"></use></svg>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer text-center">
+                                                    <a href="/dashboard/notifications" class="btn btn-sm">View all notifications</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- User dropdown -->
+                                    <div class="nav-item dropdown">
+                                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                                            <span class="avatar avatar-sm" style="background-image: url(https://ui-avatars.com/api/?name=<%= user.fullName %>&background=206bc4&color=fff)"></span>
+                                            <div class="d-none d-xl-block ps-2">
+                                                <div><%= user.fullName %></div>
+                                                <div class="mt-1 small text-muted">@<%= user.username %></div>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                            <a href="/auth/profile" class="dropdown-item">
+                                                <svg class="icon dropdown-item-icon"><use xlink:href="#tabler-user"></use></svg>
+                                                Profile
+                                            </a>
+                                            <a href="/dashboard/notifications" class="dropdown-item">
+                                                <svg class="icon dropdown-item-icon"><use xlink:href="#tabler-bell"></use></svg>
+                                                Notifications
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a href="#" class="dropdown-item" onclick="logout()">
+                                                <svg class="icon dropdown-item-icon"><use xlink:href="#tabler-logout"></use></svg>
+                                                Logout
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            
+            <!-- Page body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    <!-- Flash messages -->
+                    <% if (typeof error !== 'undefined' && error) { %>
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <svg class="icon alert-icon"><use xlink:href="#tabler-alert-circle"></use></svg>
+                                </div>
+                                <div>
+                                    <%= error %>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+                    
+                    <% if (typeof message !== 'undefined' && message) { %>
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <svg class="icon alert-icon"><use xlink:href="#tabler-check"></use></svg>
+                                </div>
+                                <div>
+                                    <%= message %>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+                    
+                    <!-- Page content -->
+                    <%- body %>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="footer footer-transparent d-print-none">
+                <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                        <div class="col-lg-auto ms-lg-auto">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    <a href="/docs" class="link-secondary">Documentation</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="/support" class="link-secondary">Support</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                                <li class="list-inline-item">
+                                    Copyright &copy; 2025
+                                    <a href="/" class="link-secondary">Dynamic Auth System</a>.
+                                    All rights reserved.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Tabler Core -->
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Global JavaScript functions
+        
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/auth/login?message=' + encodeURIComponent(data.message);
+                    } else {
+                        alert('Logout failed: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    // Fallback to regular logout
+                    window.location.href = '/auth/logout';
+                });
+            }
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+        });
+        
+        // Global AJAX setup
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add CSRF token to all AJAX requests if available
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                const token = csrfToken.getAttribute('content');
+                
+                // Set up default headers for fetch requests
+                const originalFetch = window.fetch;
+                window.fetch = function(url, options = {}) {
+                    options.headers = options.headers || {};
+                    if (!options.headers['X-CSRF-Token']) {
+                        options.headers['X-CSRF-Token'] = token;
+                    }
+                    return originalFetch(url, options);
+                };
+            }
+            
+            // Handle form submissions with loading states
+            const forms = document.querySelectorAll('form[data-async]');
+            forms.forEach(form => {
+                form.addEventListener('submit', handleAsyncForm);
+            });
+        });
+        
+        // Handle async form submissions
+        function handleAsyncForm(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.innerHTML : '';
+            
+            // Show loading state
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+            }
+            
+            // Prepare form data
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            // Submit form
+            fetch(form.action, {
+                method: form.method || 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showAlert('success', data.message || 'Operation completed successfully');
+                    
+                    // Redirect if specified
+                    if (data.redirect) {
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 1000);
+                    }
+                    
+                    // Reset form if specified
+                    if (data.resetForm !== false) {
+                        form.reset();
+                    }
+                } else {
+                    showAlert('danger', data.error || 'An error occurred');
+                }
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                showAlert('danger', 'An error occurred submitting the form');
+            })
+            .finally(() => {
+                // Restore button state
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+        
+        // Show alert message
+        function showAlert(type, message) {
+            const alertContainer = document.querySelector('.container-xl');
+            if (!alertContainer) return;
+            
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible" role="alert">
+                    <div class="d-flex">
+                        <div>
+                            <svg class="icon alert-icon">
+                                <use xlink:href="#tabler-${type === 'success' ? 'check' : 'alert-circle'}"></use>
+                            </svg>
+                        </div>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            alertContainer.insertAdjacentHTML('afterbegin', alertHtml);
+            
+            // Auto-hide after 5 seconds
+            const newAlert = alertContainer.querySelector('.alert');
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(newAlert);
+                bsAlert.close();
+            }, 5000);
+        }
+        
+        // Confirm deletion
+        function confirmDelete(message = 'Are you sure you want to delete this item?') {
+            return confirm(message);
+        }
+        
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+        
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('success', 'Copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                showAlert('danger', 'Failed to copy to clipboard');
+            });
+        }
+    </script>
+    
+    <% if (typeof extraJS !== 'undefined') { %>
+        <%= extraJS %>
+    <% } %>
+</body>
+</html>
